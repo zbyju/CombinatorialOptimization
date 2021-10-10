@@ -3,7 +3,8 @@ package DU1
 
 import Common.KnapsackProblem.{DecisionInstance, Solution}
 import Common.KnapsackProblem.Solvers.{AbstractDecisionKnapsackSolver, BBDecisionKnapsackSolver, DecisionKnapsackSolver}
-import Common.FileLoader
+import Common.{FileLoader, StatsTracker}
+
 import cz.cvut.fit.juriczby.Common.FileSaver.{saveFile, saveFileNum}
 
 object DU1FileLoader extends FileLoader {
@@ -20,66 +21,48 @@ object DU1FileLoader extends FileLoader {
                                                   solutions(i, filenamesSols).find(_.id == x.id)
                                                     .getOrElse(Solution(s"Could not find ${x.id}", 0, 0, 0, Seq()))))
 
-  def run(fileIndex: Int, solver: AbstractDecisionKnapsackSolver, files: Seq[String]): Unit = {
-    val inst = instances(fileIndex, files)
-    val sSols = sampleSols(fileIndex, files, solFilesZR)
-
-    val sols = inst.map(i => solver.solve(i))
-    println(s"True: ${sols.count(x => x)} | ${sSols.count(x => x._2.totalPrice >= x._1.minPrice)}")
-    println(s"False: ${sols.count(x => !x)} | ${sSols.count(x => x._2.totalPrice < x._1.minPrice)}")
+  def run(inst: DecisionInstance, solver: AbstractDecisionKnapsackSolver, statsTracker: StatsTracker): StatsTracker = {
+    solver.solve(inst, statsTracker)
+    statsTracker
   }
 
-  def run(fileIndex: Int, instanceIndex: Int, solver: AbstractDecisionKnapsackSolver, files: Seq[String]): Unit = {
-    val inst = instances(fileIndex, files)
-    val sol = solver.solve(inst(instanceIndex))
-    val sSol = sampleSols(fileIndex, files, solFilesNR)(instanceIndex)
-    println(s"$instanceIndex | My solution: $sol | Sample Solution: ${sSol._2.totalPrice >= sSol._1.minPrice}")
-  }
-
-  def timedRun(fileIndex: Int, solver: AbstractDecisionKnapsackSolver, files: Seq[String]): Long = {
-    val startTime = System.currentTimeMillis()
-    run(fileIndex, solver, files)
-    val endTime = System.currentTimeMillis()
-    val time = (endTime - startTime) / 1000
-    println(s"Total time: ${time}s")
-    time
-  }
-
-  def timedRun(fileIndex: Int, instanceIndex: Int, solver: AbstractDecisionKnapsackSolver, files: Seq[String]): Long = {
-    val startTime = System.currentTimeMillis()
-    run(fileIndex, instanceIndex, solver, files)
-    val endTime = System.currentTimeMillis()
-    val time = (endTime - startTime) / 1000
-    println(s"Total time: ${time}s")
-    time
-  }
-
-  def timedRun(instance: DecisionInstance, solver: AbstractDecisionKnapsackSolver): Long = {
-    val startTime = System.currentTimeMillis()
-    val sol = solver.solve(instance)
-    val endTime = System.currentTimeMillis()
-    val time = endTime - startTime
-    println(s"Total time: ${time}ms")
-    time
-  }
-
-  def runAll(maxIndex: Int, solver: AbstractDecisionKnapsackSolver, files: Seq[String]): Seq[String] = {
+  def runAll(maxIndex: Int, solver: AbstractDecisionKnapsackSolver, files: Seq[String]): Seq[Seq[StatsTracker]] = {
     files.zipWithIndex.filter(x => x._2 <= maxIndex)
-      .map(x => instances(x._2, files)).map(file => file.map(i => timedRun(i, solver)).mkString(","))
+      .map(x => instances(x._2, files)).map(file => file.map(i => {
+        val statsTracker = StatsTracker()
+        run(i, solver, statsTracker)
+    }))
+  }
+
+  def runIndex(index: Int, solver: AbstractDecisionKnapsackSolver, files: Seq[String]): Seq[Seq[StatsTracker]] = {
+    files(index)
+      .map(x => instances(index, files)).map(file => file.map(i => {
+      val statsTracker = StatsTracker()
+      run(i, solver, statsTracker)
+    }))
   }
 
   def main(args: Array[String]): Unit = {
     val solver = new DecisionKnapsackSolver()
     val bbSolver = new BBDecisionKnapsackSolver()
-    val maxIndex = 5
-    val timesNR = runAll(maxIndex, solver, filesNR)
-    val timesZR = runAll(maxIndex, solver, filesZR)
-    val timesBBNR = runAll(maxIndex, bbSolver, filesNR)
-    val timesBBZR = runAll(maxIndex, bbSolver, filesZR)
-    saveFile(timesNR, "timesNR", "times")
-    saveFile(timesZR, "timesZR", "times")
-    saveFile(timesBBNR, "timesBBNR", "times")
-    saveFile(timesBBZR, "timesBBZR", "times")
+    val maxIndex = 7
+    val maxIndexZR = 5
+    val statsNR = runAll(maxIndex, solver, filesNR)
+    println("NR Done")
+    val statsZR = runAll(maxIndexZR, solver, filesZR)
+    println("ZR Done")
+    val statsBBNR = runAll(maxIndex, bbSolver, filesNR)
+    println("BBNR Done")
+    val statsBBZR = runAll(maxIndexZR, bbSolver, filesZR)
+    println("BBZR Done")
+    saveFile(statsNR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "countsNR", "counts")
+    saveFile(statsZR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "countsZR", "counts")
+    saveFile(statsBBNR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "countsBBNR", "counts")
+    saveFile(statsBBZR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "countsBBZR", "counts")
 
+    saveFile(statsNR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "timesNR", "times")
+    saveFile(statsZR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "timesZR", "times")
+    saveFile(statsBBNR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "timesBBNR", "times")
+    saveFile(statsBBZR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "timesBBZR", "times")
   }
 }

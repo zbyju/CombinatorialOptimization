@@ -3,19 +3,27 @@ package Common.KnapsackProblem.Solvers
 import Common.KnapsackProblem.DecisionInstance
 
 import cz.cvut.fit.juriczby.Common.KnapsackProblem.DecisionInstance.{nextInstance, nextInstanceNotChosen}
+import cz.cvut.fit.juriczby.Common.StatsTracker
 
 class BBDecisionKnapsackSolver() extends AbstractDecisionKnapsackSolver {
-  override def solve(i: DecisionInstance): Boolean = {
-    if(i.numberOfItems != i.items.length) return false
-    if(i.numberOfItems == 0 || i.minPrice == 0) return true
-    solveRecursive(i)
+  def solved(result: Boolean, statsTracker: StatsTracker): Boolean = {
+    statsTracker.setTimeEnd()
+    result
   }
 
-  private def solveRecursive(i: DecisionInstance): Boolean = {
+  override def solve(i: DecisionInstance, statsTracker: StatsTracker): Boolean = {
+    statsTracker.setTimeStart()
+    if(i.numberOfItems != i.items.length) return solved(result = false, statsTracker)
+    if(i.numberOfItems == 0 || i.minPrice == 0) return solved(result = true, statsTracker)
+    solved(result = solveRecursive(i, statsTracker), statsTracker)
+  }
+
+  private def solveRecursive(i: DecisionInstance, statsTracker: StatsTracker): Boolean = {
+    statsTracker.incConfigurationsCount()
     if(i.knapsackCapacity < 0) return false
     if(i.minPrice <= 0) return true
     if(i.minPrice - i.totalWeight > 0) return false
     if(i.numberOfItems == 0) return false
-    solveRecursive(nextInstance(i)) || solveRecursive(nextInstanceNotChosen(i))
+    solveRecursive(nextInstance(i), statsTracker) || solveRecursive(nextInstanceNotChosen(i), statsTracker)
   }
 }
