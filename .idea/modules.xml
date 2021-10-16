@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/KOP.iml" filepath="$PROJECT_DIR$/.idea/modules/KOP.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/KOP-build.iml" filepath="$PROJECT_DIR$/.idea/modules/KOP-build.iml" />
     </modules>
   </component>
 </project>

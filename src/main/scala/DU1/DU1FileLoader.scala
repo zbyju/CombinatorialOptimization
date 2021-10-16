@@ -26,6 +26,12 @@ object DU1FileLoader extends FileLoader {
     statsTracker
   }
 
+  def run(inst: DecisionInstance, solver: AbstractDecisionKnapsackSolver, statsTracker: StatsTracker, solution: Solution): StatsTracker = {
+    val test =solver.solve(inst, statsTracker)
+    if(solution.totalPrice >= inst.minPrice != test) println("sadfjksakdjfas")
+    statsTracker
+  }
+
   def runAll(maxIndex: Int, solver: AbstractDecisionKnapsackSolver, files: Seq[String]): Seq[Seq[StatsTracker]] = {
     files.zipWithIndex.filter(x => x._2 <= maxIndex)
       .map(x => instances(x._2, files)).map(file => file.map(i => {
@@ -45,24 +51,24 @@ object DU1FileLoader extends FileLoader {
   def main(args: Array[String]): Unit = {
     val solver = new DecisionKnapsackSolver()
     val bbSolver = new BBDecisionKnapsackSolver()
-    val maxIndex = 7
-    val maxIndexZR = 5
-    val statsNR = runAll(maxIndex, solver, filesNR)
-    println("NR Done")
-    val statsZR = runAll(maxIndexZR, solver, filesZR)
-    println("ZR Done")
-    val statsBBNR = runAll(maxIndex, bbSolver, filesNR)
-    println("BBNR Done")
-    val statsBBZR = runAll(maxIndexZR, bbSolver, filesZR)
-    println("BBZR Done")
-    saveFile(statsNR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "countsNR", "counts")
-    saveFile(statsZR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "countsZR", "counts")
-    saveFile(statsBBNR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "countsBBNR", "counts")
-    saveFile(statsBBZR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "countsBBZR", "counts")
-
-    saveFile(statsNR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "timesNR", "times")
-    saveFile(statsZR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "timesZR", "times")
-    saveFile(statsBBNR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "timesBBNR", "times")
-    saveFile(statsBBZR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "timesBBZR", "times")
+    val maxIndex = 0
+    val maxIndexZR = 0
+//    val statsNR = runAll(maxIndex, solver, filesNR)
+//    println("NR Done")
+//    val statsZR = runAll(maxIndexZR, solver, filesZR)
+//    println("ZR Done")
+//    val statsBBNR = runAll(maxIndex, bbSolver, filesNR)
+//    println("BBNR Done")
+//    val statsBBZR = runAll(maxIndexZR, bbSolver, filesZR)
+//    println("BBZR Done")
+//    saveFile(statsNR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "countsNR", "counts")
+//    saveFile(statsZR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "counts0ZR", "counts")
+//    saveFile(statsBBNR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "countsBBNR", "counts")
+//    saveFile(statsBBZR.map(file => file.map(inst => inst.getConfigurationsCount).mkString(",")), "counts0BBZR", "counts")
+//
+//    saveFile(statsNR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "timesNR", "times")
+//    saveFile(statsZR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "times0ZR", "times")
+//    saveFile(statsBBNR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "timesBBNR", "times")
+//    saveFile(statsBBZR.map(file => file.map(inst => inst.getTimeMillis).mkString(",")), "times0BBZR", "times")
   }
 }
