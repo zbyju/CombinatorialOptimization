@@ -4,7 +4,6 @@ package common.knapsack.solver.decision
 import common.knapsack.instance.decision.DecisionInstance
 
 import cz.cvut.fit.juriczby.common.knapsack.instance.decision.DecisionInstance.{nextInstance, nextInstanceNotChosen}
-import cz.cvut.fit.juriczby.common.knapsack.solver.AbstractDecisionKnapsackSolver
 import cz.cvut.fit.juriczby.common.knapsack.instance.decision.DecisionResult
 import cz.cvut.fit.juriczby.common.stats.StatsTracker
 

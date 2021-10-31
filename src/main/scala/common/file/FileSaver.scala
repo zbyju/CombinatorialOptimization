@@ -1,7 +1,7 @@
 package cz.cvut.fit.juriczby
 package common.file
 
-import cz.cvut.fit.juriczby.common.knapsack.instance.decision.DecisionResult
+import cz.cvut.fit.juriczby.common.knapsack.instance.Result
 
 import java.io.{BufferedWriter, File, FileWriter}
 
@@ -19,7 +19,7 @@ object FileSaver {
     println(s"Saved file '$filename'")
   }
 
-  def saveFileDecisionResults(results: Seq[Seq[DecisionResult]], filename: String, homeworkNumber: Int): Unit = {
+  def saveFileResults(results: Seq[Seq[Result]], filename: String, homeworkNumber: Int): Unit = {
     val file = new File("./results/HW" + homeworkNumber + "/" + filename)
     val bw = new BufferedWriter(new FileWriter(file))
     val countsOutput = results.map(rf => rf.map(r => r.statsTracker.getConfigurationsCount).mkString(" ")).mkString("", "\n", "\n")

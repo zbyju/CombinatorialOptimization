@@ -20,7 +20,7 @@ object DecisionInstance {
     val items = itemFieldsWithIndex.filter(_._2 % 2 == 0).map(f => f._1)
       .zip(itemFieldsWithIndex.filter(_._2 % 2 == 1).map(f => f._1))
       .map(f => Item(f._1.toInt, f._2.toInt))
-    DecisionInstance(fields(3).toInt, name, fields.head.toInt * -1, fields(1).toInt, fields(2).toInt, items)
+    DecisionInstance(fields(3).toInt, name, Math.abs(fields.head.toInt), fields(1).toInt, fields(2).toInt, items)
   }
 
   def nextInstance(i: DecisionInstance): DecisionInstance = {
