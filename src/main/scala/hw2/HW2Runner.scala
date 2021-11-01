@@ -5,13 +5,14 @@ import common.file.FileSaver
 
 import cz.cvut.fit.juriczby.common.file.instancefiles.constructive.ConstructiveInstanceFile
 import cz.cvut.fit.juriczby.common.knapsack.instance.contructive.ConstructiveResult
-import cz.cvut.fit.juriczby.common.knapsack.solver.constructive.{AbstractConstructiveKnapsackSolver, ConstructiveKnapsackSolver}
+import cz.cvut.fit.juriczby.common.knapsack.solver.constructive.{AbstractConstructiveKnapsackSolver, ConstructiveKnapsackSolver, BBConstructiveKnapsackSolver}
 import cz.cvut.fit.juriczby.common.stats.StatsTracker
 import cz.cvut.fit.juriczby.common.Runner
 
 object HW2Runner extends Runner(2) {
   val fl = new HW2FileLoader()
   val solver = new ConstructiveKnapsackSolver()
+  val BBsolver = new BBConstructiveKnapsackSolver()
 
   def runInstanceById(file: ConstructiveInstanceFile, instanceId: Int, solver: AbstractConstructiveKnapsackSolver): ConstructiveResult = {
     solver.solve(file.instances(instanceId), new StatsTracker())
@@ -41,8 +42,16 @@ object HW2Runner extends Runner(2) {
     val statsNK = runAllFiles(maxIndex, fl.instanceFilesNK, solver)
     val statsZKC = runAllFiles(maxIndexZR, fl.instanceFilesZKC, solver)
     val statsZKW = runAllFiles(maxIndexZR, fl.instanceFilesZKW, solver)
+
+    val statsBBNK = runAllFiles(maxIndex, fl.instanceFilesNK, BBsolver)
+    val statsBBZKC = runAllFiles(maxIndexZR, fl.instanceFilesZKC, BBsolver)
+    val statsBBZKW = runAllFiles(maxIndexZR, fl.instanceFilesZKW, BBsolver)
     FileSaver.saveFileResults(statsNK, "NK", 2)
     FileSaver.saveFileResults(statsZKC, "ZKC", 2)
     FileSaver.saveFileResults(statsZKW, "ZKW", 2)
+
+    FileSaver.saveFileResults(statsBBNK, "BBNK", 2)
+    FileSaver.saveFileResults(statsBBZKC, "BBZKC", 2)
+    FileSaver.saveFileResults(statsBBZKW, "BBZKW", 2)
   }
 }

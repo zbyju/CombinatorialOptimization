@@ -10,8 +10,14 @@ case class ConstructiveInstance(chosenItems: Seq[Boolean],
                             override val knapsackCapacity: Int,
                             override val items: Seq[Item]) extends Instance(name, id, numberOfItems, knapsackCapacity, items) {
 
-  def chosenPrice: Int = {
+  val chosenPrice: Int = {
     chosenItems.zipWithIndex.map(x => if(x._1) items(x._2).price else 0).sum
+  }
+
+  val chosenItemsInt = chosenItems.map(x => if(x) 1 else 0)
+
+  def maxPotentialPrice: Int = {
+    items.map(i => i.price).take(numberOfItems).sum + chosenPrice
   }
 
   override def toString: String = s"ID: $id, n: $numberOfItems, M: $knapsackCapacity, chosen: $chosenPrice - $chosenItems"
