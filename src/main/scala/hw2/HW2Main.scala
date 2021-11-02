@@ -7,9 +7,9 @@ import cz.cvut.fit.juriczby.common.file.instancefiles.constructive.ConstructiveI
 import cz.cvut.fit.juriczby.common.knapsack.instance.contructive.ConstructiveResult
 import cz.cvut.fit.juriczby.common.knapsack.solver.constructive.{AbstractConstructiveKnapsackSolver, BBConstructiveKnapsackSolver, ConstructiveKnapsackSolver, GreedyConstructiveKnapsackSolver, GreedyReduxConstructiveKnapsackSolver}
 import cz.cvut.fit.juriczby.common.stats.StatsTracker
-import cz.cvut.fit.juriczby.common.Runner
+import cz.cvut.fit.juriczby.common.TMain
 
-object HW2Runner extends Runner(2) {
+object HW2Main extends TMain(2) {
   val fl = new HW2FileLoader()
   val solver = new ConstructiveKnapsackSolver()
   val BBsolver = new BBConstructiveKnapsackSolver()

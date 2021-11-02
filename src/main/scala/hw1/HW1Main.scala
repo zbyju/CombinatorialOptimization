@@ -5,11 +5,11 @@ import common.knapsack.solver.decision.{AbstractDecisionKnapsackSolver, BBDecisi
 
 import cz.cvut.fit.juriczby.common.knapsack.instance.decision.DecisionResult
 import cz.cvut.fit.juriczby.common.stats.StatsTracker
-import cz.cvut.fit.juriczby.common.Runner
+import cz.cvut.fit.juriczby.common.TMain
 import cz.cvut.fit.juriczby.common.file.FileSaver
 import cz.cvut.fit.juriczby.common.file.instancefiles.decision.DecisionInstanceFile
 
-object HW1Runner extends Runner(1) {
+object HW1Main extends TMain(1) {
   val fl = new HW1FileLoader()
   val solver = new DecisionKnapsackSolver()
   val bbSolver = new BBDecisionKnapsackSolver()
