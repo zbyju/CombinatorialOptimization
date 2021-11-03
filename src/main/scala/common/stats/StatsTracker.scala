@@ -10,7 +10,10 @@ case class StatsTracker() {
   def getConfigurationsCount: Long = configurationsCount.get()
   def incConfigurationsCount(): Long = configurationsCount.incrementAndGet()
 
+  def getTimeStart(): Long = timeStart
+
   def setTimeStart(): Unit = timeStart = System.nanoTime()
+  def setTimeStart(time: Long): Unit = timeStart = time
 
   def setTimeEnd(): Unit = timeEnd = System.nanoTime()
 

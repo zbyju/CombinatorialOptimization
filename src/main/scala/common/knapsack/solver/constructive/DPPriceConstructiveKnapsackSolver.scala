@@ -27,6 +27,8 @@ class DPPriceConstructiveKnapsackSolver extends AbstractConstructiveKnapsackSolv
 
     for(i <- (0 to inst.numberOfItems)) {
       for(c <- (0 to inst.maxPotentialPrice)) {
+        statsTracker.incConfigurationsCount()
+
         if(i == 0 && c > 0) {
           W(i)(c) = TableCell(maxIntWeight, i, c)
         } else if(i > 0) {
@@ -44,6 +46,8 @@ class DPPriceConstructiveKnapsackSolver extends AbstractConstructiveKnapsackSolv
     val maxPrice = maxWeight.costIndex
     var c: Int = maxPrice
     for (i <- (inst.numberOfItems.until(0, -1))) {
+      statsTracker.incConfigurationsCount()
+
       if(W(i)(c).weight != W(i - 1)(c).weight) {
         finalChosenItems = finalChosenItems.updated(i - 1, true)
         c -= inst.items(i - 1).price
