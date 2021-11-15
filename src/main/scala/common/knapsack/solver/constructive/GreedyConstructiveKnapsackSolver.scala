@@ -4,6 +4,8 @@ import common.knapsack.instance.contructive.{ConstructiveInstance, ConstructiveR
 import common.stats.StatsTracker
 
 class GreedyConstructiveKnapsackSolver extends AbstractConstructiveKnapsackSolver {
+  override val name = "Greedy"
+
   override def solve(i: ConstructiveInstance, statsTracker: StatsTracker): ConstructiveResult = {
     statsTracker.setTimeStart()
     // First item has the biggest ratio

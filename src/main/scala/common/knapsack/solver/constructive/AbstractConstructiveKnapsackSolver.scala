@@ -6,5 +6,7 @@ import common.knapsack.instance.contructive.{ConstructiveInstance, ConstructiveR
 import cz.cvut.fit.juriczby.common.stats.StatsTracker
 
 abstract class AbstractConstructiveKnapsackSolver {
+  val name: String
+
   def solve(i: ConstructiveInstance, statsTracker: StatsTracker): ConstructiveResult
 }

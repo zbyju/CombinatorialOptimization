@@ -13,6 +13,8 @@ case class MaxTracker(max: AtomicInteger = new AtomicInteger(0)) {
 }
 
 class BBConstructiveKnapsackSolver() extends AbstractConstructiveKnapsackSolver {
+  override val name = "BranchBound"
+
   override def solve(i: ConstructiveInstance, statsTracker: StatsTracker): ConstructiveResult = {
     statsTracker.setTimeStart()
     val maxTracker = MaxTracker()

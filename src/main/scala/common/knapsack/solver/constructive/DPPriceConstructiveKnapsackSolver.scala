@@ -10,6 +10,7 @@ case class TableCell(weight: Int, itemIndex: Int, costIndex: Int) {
 }
 
 class DPPriceConstructiveKnapsackSolver extends AbstractConstructiveKnapsackSolver {
+  override val name = "DynamicProgrammingPrice"
 
   override def solve(inst: ConstructiveInstance, statsTracker: StatsTracker): ConstructiveResult = {
     statsTracker.setTimeStart()

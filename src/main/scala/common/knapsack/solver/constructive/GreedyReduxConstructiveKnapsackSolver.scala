@@ -6,6 +6,8 @@ import common.stats.StatsTracker
 import cz.cvut.fit.juriczby.common.knapsack.instance.Item
 
 class GreedyReduxConstructiveKnapsackSolver extends GreedyConstructiveKnapsackSolver {
+  override val name = "GreedyRedux"
+
   override def solve(i: ConstructiveInstance, statsTracker: StatsTracker): ConstructiveResult = {
     val greedySol = super.solve(i, statsTracker)
     val itemsFit = i.items.filter(item => item.weight <= i.knapsackCapacity)

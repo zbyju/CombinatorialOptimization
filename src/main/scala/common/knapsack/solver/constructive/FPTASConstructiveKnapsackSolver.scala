@@ -5,7 +5,9 @@ import common.stats.StatsTracker
 
 import cz.cvut.fit.juriczby.common.knapsack.instance.Item
 
-class FPTASConstructiveKnapsackSolver extends AbstractConstructiveKnapsackSolver {
+class FPTASConstructiveKnapsackSolver(val epsilon: Double = 0.1) extends AbstractConstructiveKnapsackSolver {
+  override val name = "FPTAS-" + epsilon
+
   override def solve(i: ConstructiveInstance, statsTracker: StatsTracker): ConstructiveResult = {
     statsTracker.setTimeStart()
     val timeStart = statsTracker.getTimeStart()
@@ -15,10 +17,8 @@ class FPTASConstructiveKnapsackSolver extends AbstractConstructiveKnapsackSolver
     if(itemsThatFit.isEmpty) return ConstructiveResult(0, i.chosenItems, statsTracker)
 
     val maxPrice = itemsThatFit.maxBy(_.price).price
-    val epsilon = 0.001
-    val K = Math.min((epsilon * maxPrice) / i.numberOfItems, 1)
-    val FPTASInstance = ConstructiveInstance(i.chosenItems, i.name, i.id, i.numberOfItems, i.knapsackCapacity, i.items.map(i => Item(i.weight, Math.floor(i.price / K).toInt)))
-
+    val K = Math.max((epsilon * maxPrice) / i.numberOfItems, 1)
+    val FPTASInstance = ConstructiveInstance(i.chosenItems, i.name, i.id, i.numberOfItems, i.knapsackCapacity, i.items.map(i => Item(i.weight, Math.max(1, Math.floor(i.price / K).toInt))))
     val dpcRes = dpcSolver.solve(FPTASInstance, statsTracker)
 
     statsTracker.setTimeStart(timeStart)

@@ -7,6 +7,8 @@ import cz.cvut.fit.juriczby.common.knapsack.instance.contructive.ConstructiveIns
 import cz.cvut.fit.juriczby.common.knapsack.instance.contructive.{ConstructiveInstance, ConstructiveResult}
 
 class ConstructiveKnapsackSolver() extends AbstractConstructiveKnapsackSolver {
+  override val name = "BruteForce"
+
   override def solve(i: ConstructiveInstance, statsTracker: StatsTracker): ConstructiveResult = {
     statsTracker.setTimeStart()
     solveRecursive(i, statsTracker)

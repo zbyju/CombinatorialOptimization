@@ -10,13 +10,13 @@ case class ConstructiveInstance(chosenItems: Seq[Boolean],
                             override val knapsackCapacity: Int,
                             override val items: Seq[Item]) extends Instance(name, id, numberOfItems, knapsackCapacity, items) {
 
-  val chosenPrice: Int = {
+  lazy val chosenPrice: Int = {
     chosenItems.zipWithIndex.map(x => if(x._1) items(x._2).price else 0).sum
   }
 
-  val chosenItemsInt = chosenItems.map(x => if(x) 1 else 0)
+  lazy val chosenItemsInt = chosenItems.map(x => if(x) 1 else 0)
 
-  def maxPotentialPrice: Int = {
+  lazy val maxPotentialPrice: Int = {
     items.map(i => i.price).take(numberOfItems).sum + chosenPrice
   }
 
