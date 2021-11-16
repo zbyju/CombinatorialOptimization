@@ -16,7 +16,7 @@ class FPTASConstructiveKnapsackSolver(val epsilon: Double = 0.1) extends Abstrac
     val itemsThatFit = i.items.filter(_.weight <= i.knapsackCapacity)
     if(itemsThatFit.isEmpty) return ConstructiveResult(0, i.chosenItems, statsTracker)
 
-    val maxPrice = itemsThatFit.maxBy(_.price).price
+    val maxPrice = i.items.maxBy(_.price).price
     val K = Math.max((epsilon * maxPrice) / i.numberOfItems, 1)
     val FPTASInstance = ConstructiveInstance(i.chosenItems, i.name, i.id, i.numberOfItems, i.knapsackCapacity, i.items.map(i => Item(i.weight, Math.max(1, Math.floor(i.price / K).toInt))))
     val dpcRes = dpcSolver.solve(FPTASInstance, statsTracker)
