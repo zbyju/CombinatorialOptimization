@@ -3,6 +3,8 @@ package common.knapsack.instance.contructive
 
 import common.knapsack.instance.{Instance, Item}
 
+import scala.util.Random
+
 case class ConstructiveInstance(chosenItems: Seq[Boolean],
                             override val name: String,
                             override val id: Int,
@@ -14,10 +16,17 @@ case class ConstructiveInstance(chosenItems: Seq[Boolean],
     chosenItems.zipWithIndex.map(x => if(x._1) items(x._2).price else 0).sum
   }
 
-  lazy val chosenItemsInt = chosenItems.map(x => if(x) 1 else 0)
+  lazy val chosenItemsInt: Seq[Int] = chosenItems.map(x => if(x) 1 else 0)
 
   lazy val maxPotentialPrice: Int = {
     items.map(i => i.price).take(numberOfItems).sum + chosenPrice
+  }
+
+  def shuffle(): ConstructiveInstance = {
+    val itemsForShuffle = chosenItems.zip(items)
+    val shuffled = Random.shuffle(itemsForShuffle)
+    val (newChosen, newItems) = shuffled.unzip
+    new ConstructiveInstance(newChosen, name, id, numberOfItems, knapsackCapacity, newItems)
   }
 
   override def toString: String = s"ID: $id, n: $numberOfItems, M: $knapsackCapacity, chosen: $chosenPrice - $chosenItems"
