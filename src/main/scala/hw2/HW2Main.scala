@@ -88,6 +88,6 @@ object HW2Main extends TMain(2) {
 
   override def main(args: Array[String]): Unit = {
 //    runInstanceById(fl.instanceFilesNK(3), 475, new FPTASConstructiveKnapsackSolver(0.001))
-    FPTAS(20)
+    branchBounds(1)
   }
 }

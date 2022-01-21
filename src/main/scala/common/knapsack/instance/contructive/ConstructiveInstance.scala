@@ -16,6 +16,10 @@ case class ConstructiveInstance(chosenItems: Seq[Boolean],
     chosenItems.zipWithIndex.map(x => if(x._1) items(x._2).price else 0).sum
   }
 
+  lazy val chosenWeight: Int = {
+    chosenItems.zipWithIndex.map(x => if(x._1) items(x._2).weight else 0).sum
+  }
+
   lazy val chosenItemsInt: Seq[Int] = chosenItems.map(x => if(x) 1 else 0)
 
   lazy val maxPotentialPrice: Int = {
@@ -48,5 +52,43 @@ object ConstructiveInstance {
   }
   def nextInstanceNotChosen(i: ConstructiveInstance): ConstructiveInstance = {
     ConstructiveInstance(i.chosenItems, i.name, i.id, i.numberOfItems - 1, i.knapsackCapacity, i.items)
+  }
+  def randomNextInstance(i: ConstructiveInstance): ConstructiveInstance = {
+    val rnd = new Random()
+    val rndIndices = rnd.shuffle(Seq.range(0, i.numberOfItems))
+    var weightChange = 0
+    rndIndices.foreach(rIndex => {
+      val chosen = i.chosenItems(rIndex)
+      if(!chosen && i.chosenWeight + i.items(rIndex).weight <= i.knapsackCapacity) {
+        return ConstructiveInstance(i.chosenItems.updated(rIndex, true),
+          i.name, i.id, i.numberOfItems, i.knapsackCapacity, i.items
+        )
+      }
+      if(chosen) {
+        return ConstructiveInstance(i.chosenItems.updated(rIndex, false),
+          i.name, i.id, i.numberOfItems, i.knapsackCapacity, i.items
+        )
+      }
+    })
+    println("WRONG3")
+    i
+  }
+  def calculateChosenWeight(chosenItems: Seq[Boolean], items: Seq[Item]): Int = {
+    chosenItems.zipWithIndex.map(x => if(x._1) items(x._2).weight else 0).sum
+  }
+  def randomInstance(i: ConstructiveInstance): ConstructiveInstance = {
+    val rnd = new Random()
+    var rndItems = Seq.fill(i.numberOfItems)(rnd.nextBoolean())
+    val rndIndices = rnd.shuffle(Seq.range(0, i.numberOfItems))
+    rndIndices.foreach(index => {
+      val item = rndItems(index)
+      if(item && calculateChosenWeight(rndItems, i.items) > i.knapsackCapacity) {
+        rndItems = rndItems.updated(index, false)
+      }
+    })
+    ConstructiveInstance(rndItems, i.name, i.id, i.numberOfItems, i.knapsackCapacity, i.items)
+  }
+  def howMuchWorse(i: ConstructiveInstance, that: ConstructiveInstance): Int = {
+    that.chosenPrice - i.chosenPrice
   }
 }

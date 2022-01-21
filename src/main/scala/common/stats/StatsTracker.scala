@@ -7,6 +7,7 @@ case class StatsTracker() {
   private var timeStart: Long = _
   private var timeEnd: Long = _
   private val configurationsCount = new AtomicLong(0)
+  private var progression: Seq[Int] = Seq()
   def getConfigurationsCount: Long = configurationsCount.get()
   def incConfigurationsCount(): Long = configurationsCount.incrementAndGet()
 
@@ -18,6 +19,10 @@ case class StatsTracker() {
   def setTimeEnd(): Unit = timeEnd = System.nanoTime()
 
   def getTimeNano: Long = timeEnd - timeStart
+
+  def addProgress(p: Int): Unit = progression = progression :+ p
+
+  def getProgression: Seq[Int] = progression
 
   override def toString() = {
     s"""#Count: $configurationsCount, Time: $getTimeNano""".stripMargin

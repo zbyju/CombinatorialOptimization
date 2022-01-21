@@ -3,6 +3,7 @@ package common.file
 
 import cz.cvut.fit.juriczby.common.knapsack.instance.Result
 import cz.cvut.fit.juriczby.common.knapsack.instance.contructive.ConstructiveResult
+import cz.cvut.fit.juriczby.common.stats.StatsTracker
 
 import java.io.{BufferedWriter, File, FileWriter}
 
@@ -43,6 +44,17 @@ object FileSaver {
     bw.write(timesOutput)
     bw.write("=\n")
     bw.write(resultsOutput)
+    bw.close()
+    println(s"Saved file '$filename'")
+  }
+
+  def saveProgression(result: ConstructiveResult, filename: String, homeworkNumber: Int): Unit = {
+    val file = new File("./results/HW" + homeworkNumber + "/" + filename)
+    val bw = new BufferedWriter(new FileWriter(file))
+    val progressionOutput = result.statsTracker.getProgression.mkString("", " ", "\n")
+    bw.write(progressionOutput)
+    bw.write("=\n")
+    bw.write(result.statsTracker.getTimeNano.toString)
     bw.close()
     println(s"Saved file '$filename'")
   }
